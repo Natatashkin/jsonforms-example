@@ -53,6 +53,99 @@
       ]
     },
     {
+      "type": "VerticalLayout",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/productCategory"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/productSubcategory",
+          "rule": {
+            "effect": "SHOW",
+            "condition": {
+              "scope": "#/properties/productCategory",
+              "schema": { "const": "Lanch" }
+            }
+          }
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/breakfast",
+          "rule": {
+            "effect": "SHOW",
+            "condition": {
+              "scope": "#/properties/productCategory",
+              "schema": { "const": "Breakfast" }
+            }
+          }
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/dinner",
+          "rule": {
+            "effect": "SHOW",
+            "condition": {
+              "scope": "#/properties/productCategory",
+              "schema": { "const": "Dinner" }
+            }
+          }
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/toasts",
+          "rule": {
+            "effect": "SHOW",
+            "condition": {
+              "scope": "#",
+              "schema": {
+                "properties": {
+                  "productSubcategory": { "const": "toast" },
+                  "productCategory": { "const": "Lanch" }
+                },
+                "required": ["productCategory", "productSubcategory"]
+              }
+            }
+          }
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/salad",
+          "rule": {
+            "effect": "SHOW",
+            "condition": {
+              "scope": "#",
+              "schema": {
+                "properties": {
+                  "productSubcategory": { "const": "salad" },
+                  "productCategory": { "const": "Lanch" }
+                },
+                "required": ["productCategory", "productSubcategory"]
+              }
+            }
+          }
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/snecks",
+          "rule": {
+            "effect": "SHOW",
+            "condition": {
+              "scope": "#",
+              "schema": {
+                "properties": {
+                  "productSubcategory": { "const": "snecks" },
+                  "productCategory": { "const": "Lanch" }
+                },
+                "required": ["productCategory", "productSubcategory"]
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
       "type": "Control",
       "scope": "#/properties/description",
       "options": {

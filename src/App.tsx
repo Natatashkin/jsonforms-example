@@ -43,7 +43,7 @@ const initialData = {
   done: true,
   recurrence: 'Daily',
   rating: 3,
-  price: '',
+  price: '45000',
 };
 
 const App = () => {
@@ -52,6 +52,7 @@ const App = () => {
   const stringifiedData = useMemo(() => JSON.stringify(data, null, 2), [data]);
   const ajv = createAjvInstance({
     formats: { date: true, year: true, price: true },
+    useDefaults: true,
   });
 
   const clearData = () => {

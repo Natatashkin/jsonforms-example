@@ -7,18 +7,17 @@
     },
     "price": {
       "type": "string",
-      "title": "Цена",
+      "title": "Price",
       "format": "price",
       "customRender": "numeric",
       "deximal": true
     },
     "year": {
       "type": "string",
-      "title": "Год",
+      "title": "Year",
       "format": "year",
       "customRender": "numeric",
-      "stringlength": 4,
-      "deximal": true
+      "stringlength": 4
     },
     "description": {
       "title": "Long Description",
@@ -41,7 +40,52 @@
     },
     "recurrence_interval": {
       "type": "integer"
+    },
+    "productCategory": {
+      "title": "Category",
+      "type": "string",
+      "enum": ["Breakfast", "Dinner", "Lanch"]
+    },
+    "productSubcategory": {
+      "title": "Subcategory",
+      "type": "string",
+      "enum": ["toast", "salad", "snecks"]
+    },
+    "breakfast": {
+      "type": "string",
+      "enum": ["eggs", "toast with butter", "salad"]
+    },
+    "dinner": {
+      "type": "string",
+      "enum": ["borsch", "porridge with cutlet", "salad"]
+    },
+    "drinks": {
+      "type": "string",
+      "enum": ["coffee", "tea", "juice"]
+    },
+    "toasts": {
+      "type": "string",
+      "enum": ["with butter", "with jam"]
+    },
+    "salad": {
+      "type": "string",
+      "enum": ["with tomatos", "with broccoli", "with salmon"]
+    },
+    "snecks": {
+      "type": "string",
+      "enum": ["nuts", "chips", "cookies"]
     }
   },
-  "required": ["name", "due_date", "price"]
+
+  "required": [
+    "name",
+    "price",
+    "productSubcategory",
+    "toasts",
+    "salad",
+    "snecks",
+    "breakfast",
+    "dinner",
+    "productCategory"
+  ]
 }

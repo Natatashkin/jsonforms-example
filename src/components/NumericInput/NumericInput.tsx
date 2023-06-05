@@ -1,16 +1,22 @@
-import React, { ChangeEvent, ChangeEventHandler, useState } from 'react';
-import { withJsonFormsControlProps } from '@jsonforms/react';
+import React, { ChangeEvent, useState } from 'react';
 import Input, { InputProps } from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
-import Box from '@mui/material/Box';
 import FormHelperText from '@mui/material/FormHelperText';
+import CloseIcon from '@mui/icons-material/Close';
+import {
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputBase,
+} from '@mui/material';
 
 interface INumericInputProps extends InputProps {
   updateValue: (value: string) => void;
   label?: string;
   helperText: string | string[];
-  length?: number;
+  stringlength?: number;
   deximal?: boolean;
+  required?: boolean;
 }
 
 export const NumericInput = ({
@@ -20,22 +26,28 @@ export const NumericInput = ({
   label,
   error,
   helperText,
-  length = 0,
+  stringlength = 0,
   deximal = false,
+  required = false,
 }: INumericInputProps) => {
   const [inputValue, setInputValue] = useState(value || '');
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value: innerValue } = e.target;
+    const testPattern = deximal ? /^\d*\.?\d*$/ : /^\d*$/;
+    const notValidLength = innerValue.length > stringlength;
 
-    if (/^\d*\.?\d*$/.test(innerValue)) {
-      if (/^00/.test(innerValue)) {
+    if (testPattern.test(innerValue)) {
+      if (stringlength && notValidLength) {
+        return;
+      }
+      if (deximal && /^00/.test(innerValue)) {
         const updatedValue = innerValue.replace('00', '0.');
         updateValue(updatedValue);
         setInputValue(updatedValue);
         return;
       }
-      if (/\.\d{3}$/.test(innerValue)) {
+      if (deximal && /\.\d{3}$/.test(innerValue)) {
         const toDeximalValue = parseFloat(innerValue).toFixed(2).toString();
         updateValue(toDeximalValue);
         setInputValue(toDeximalValue);
@@ -47,46 +59,23 @@ export const NumericInput = ({
   };
 
   return (
-    <Box>
-      {label && <InputLabel error={error}>{label}</InputLabel>}
-      <Input value={inputValue} id={id} onChange={handleChange} error={error} />
+    <FormControl id={id} fullWidth>
+      {label && (
+        <InputLabel error={error} required={required}>
+          {label}
+        </InputLabel>
+      )}
+      <>
+        <InputBase
+          value={inputValue}
+          onChange={handleChange}
+          error={error}
+          endAdornment={
+            <IconButton children={<CloseIcon fontSize='medium' />} />
+          }
+        />
+      </>
       {error && <FormHelperText error={error}>{helperText}</FormHelperText>}
-    </Box>
+    </FormControl>
   );
 };
-
-interface NumericControlProps {
-  data: any;
-  handleChange: (path: string, value: any) => void;
-  path: string;
-  label: string;
-  errors: string | string[];
-  length?: number | undefined;
-}
-
-const NumericControl = (props: NumericControlProps) => {
-  const { data, handleChange, label, path, errors, length } = props;
-  console.log('PriceControl', props);
-  console.log('length', length);
-
-  const onChange = (path: string, newValue: string) => {
-    if (!newValue) {
-      handleChange(path, undefined);
-      return;
-    }
-    handleChange(path, newValue);
-  };
-
-  return (
-    <NumericInput
-      label={label}
-      value={data}
-      updateValue={(value: string) => onChange(path, value)}
-      error={Boolean(errors)}
-      helperText={errors}
-      length={length}
-    />
-  );
-};
-
-export default withJsonFormsControlProps(NumericControl);
