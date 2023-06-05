@@ -1,0 +1,47 @@
+{
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "price": {
+      "type": "string",
+      "title": "Цена",
+      "format": "price",
+      "customRender": "numeric",
+      "deximal": true
+    },
+    "year": {
+      "type": "string",
+      "title": "Год",
+      "format": "year",
+      "customRender": "numeric",
+      "stringlength": 4,
+      "deximal": true
+    },
+    "description": {
+      "title": "Long Description",
+      "type": "string"
+    },
+    "done": {
+      "type": "boolean"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "rating": {
+      "type": "integer",
+      "maximum": 5
+    },
+    "recurrence": {
+      "type": "string",
+      "enum": ["Never", "Daily", "Weekly", "Monthly"]
+    },
+    "recurrence_interval": {
+      "type": "integer"
+    }
+  },
+  "required": ["name", "due_date", "price"]
+}
