@@ -1,22 +1,23 @@
-import React, { ChangeEvent, useState } from 'react';
-import Input, { InputProps } from '@mui/material/Input';
+import React, {
+  ChangeEvent,
+  useState,
+  useEffect,
+  MouseEventHandler,
+} from 'react';
+import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import InputLabel from '@mui/material/InputLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import CloseIcon from '@mui/icons-material/Close';
-import {
-  FormControl,
-  IconButton,
-  InputAdornment,
-  InputBase,
-} from '@mui/material';
+import { FormControl, IconButton } from '@mui/material';
 
-interface INumericInputProps extends InputProps {
+interface INumericInputProps extends InputBaseProps {
   updateValue: (value: string) => void;
   label?: string;
   helperText: string | string[];
   stringlength?: number;
   deximal?: boolean;
   required?: boolean;
+  value: string | undefined;
 }
 
 export const NumericInput = ({
@@ -41,6 +42,7 @@ export const NumericInput = ({
       if (stringlength && notValidLength) {
         return;
       }
+
       if (deximal && /^00/.test(innerValue)) {
         const updatedValue = innerValue.replace('00', '0.');
         updateValue(updatedValue);
@@ -58,6 +60,17 @@ export const NumericInput = ({
     }
   };
 
+  const handleDeleteClick = () => {
+    setInputValue('');
+    updateValue('');
+  };
+
+  useEffect(() => {
+    if (!value) {
+      setInputValue('');
+    }
+  }, [value]);
+
   return (
     <FormControl id={id} fullWidth>
       {label && (
@@ -71,7 +84,10 @@ export const NumericInput = ({
           onChange={handleChange}
           error={error}
           endAdornment={
-            <IconButton children={<CloseIcon fontSize='medium' />} />
+            <IconButton
+              onClick={handleDeleteClick}
+              children={<CloseIcon fontSize='medium' />}
+            />
           }
         />
       </>

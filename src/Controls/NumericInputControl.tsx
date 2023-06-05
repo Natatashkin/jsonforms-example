@@ -6,7 +6,7 @@ import { useDebouncedCallback } from 'use-debounce';
 // import { useJsonForms } from '@jsonforms/react';
 
 interface NumericInputControlProps {
-  data: any;
+  data: string | undefined;
   handleChange: (path: string, value: any) => void;
   path: string;
   label: string;
@@ -24,7 +24,6 @@ const NumericInputControl = (props: NumericInputControlProps) => {
     stringlength: number;
     deximal: boolean;
   };
-  console.log(data);
 
   // just testing how to get Form context
   // const context = useJsonForms();
