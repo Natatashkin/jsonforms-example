@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/jsonforms-example/static/css/main.be13a975.css",
+    "main.js": "/jsonforms-example/static/js/main.d8bf07ca.js",
+    "static/media/logo.svg": "/jsonforms-example/static/media/logo.2d27ead7c10f774c5306bcf3c257a728.svg",
+    "index.html": "/jsonforms-example/index.html",
+    "main.be13a975.css.map": "/jsonforms-example/static/css/main.be13a975.css.map",
+    "main.d8bf07ca.js.map": "/jsonforms-example/static/js/main.d8bf07ca.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.be13a975.css",
+    "static/js/main.d8bf07ca.js"
+  ]
+}
