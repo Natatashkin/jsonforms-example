@@ -38,7 +38,23 @@ const customTheme = createTheme({
             '&.Mui-error': {
               outline: `2px solid ${theme.palette.error.main}`,
             },
+            '& .MuiButtonBase-root': {
+              position: 'absolute',
+              right: 0,
+            },
           };
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          padding: 12,
+          borderRadius: '50%',
+          '& svg': {
+            borderRadius: '50%',
+            backgroundColor: 'white',
+          },
         },
       },
     },
