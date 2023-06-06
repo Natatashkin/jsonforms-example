@@ -13,6 +13,7 @@ import {
 import {
   StatePropsOfLayout,
   categorizationHasCategory,
+  deriveLabelForUISchemaElement,
   RankedTester,
   and,
   rankWith,
@@ -38,6 +39,7 @@ const StepperLayout = (props: StepperLayoutProps) => {
     config,
     data,
     ajv,
+    t,
     schema,
     path,
     visible,
@@ -56,13 +58,11 @@ const StepperLayout = (props: StepperLayoutProps) => {
 
   const categories = useMemo(
     () =>
-      categorization.elements.filter(
-        (category) => category.type === 'Category'
+      categorization.elements.filter((category) =>
+        isVisible(category, data, path, ajv)
       ),
-    [categorization, data]
+    [categorization, data, ajv]
   );
-
-  console.log(categories);
 
   const childProps: MaterialLayoutRendererProps = {
     elements: categories[activeCategory].elements,
@@ -74,18 +74,24 @@ const StepperLayout = (props: StepperLayoutProps) => {
     cells,
   };
 
+  const tabLabels = useMemo(() => {
+    return categories.map((e) => deriveLabelForUISchemaElement(e, t));
+  }, [categories, t]);
+
+  // need finish from https://github.com/eclipsesource/jsonforms/blob/master/packages/material-renderers/src/layouts/MaterialCategorizationStepperLayout.tsx
+
   return (
     <Box>
       should be stepper layout
-      {/* <Stepper activeStep={activeCategory} nonLinear>
-        {categories.map((_: Category, idx: number) => (
+      <Stepper activeStep={activeCategory} nonLinear>
+        {categories.map((_, idx: number) => (
           <Step key={tabLabels[idx]}>
             <StepButton onClick={() => handleStep(idx)}>
               {tabLabels[idx]}
             </StepButton>
           </Step>
         ))}
-      </Stepper> */}
+      </Stepper>
       <MaterialLayoutRenderer {...childProps} />
     </Box>
   );

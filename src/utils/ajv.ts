@@ -3,6 +3,8 @@ import Ajv from 'ajv';
 import addErrors from 'ajv-errors';
 import addFormats from 'ajv-formats';
 
+// need refactoring https://kukshalkanishka.medium.com/customising-json-forms-7fc75f627fff
+
 export const createAjvInstance = (options: any) => {
   const ajv = new Ajv({
     allErrors: true,
