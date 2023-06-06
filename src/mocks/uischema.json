@@ -1,138 +1,98 @@
 {
-  "type": "VerticalLayout",
+  "type": "Categorization",
   "elements": [
     {
-      "type": "Control",
-      "label": "Completed",
-      "scope": "#/properties/done"
-    },
-    {
-      "type": "Control",
-      "scope": "#/properties/name"
-    },
-    {
-      "type": "Control",
-      "scope": "#/properties/price"
-    },
-    {
-      "type": "Control",
-      "scope": "#/properties/year"
-    },
-    {
-      "type": "HorizontalLayout",
+      "type": "Category",
+      "label": "First",
       "elements": [
         {
           "type": "Control",
-          "scope": "#/properties/due_date"
+          "label": "Completed",
+          "scope": "#/properties/done"
         },
         {
           "type": "Control",
-          "scope": "#/properties/rating"
+          "scope": "#/properties/name"
         }
       ]
     },
     {
-      "type": "HorizontalLayout",
+      "type": "Category",
+      "label": "Second",
       "elements": [
         {
           "type": "Control",
-          "scope": "#/properties/recurrence"
+          "scope": "#/properties/price"
         },
         {
           "type": "Control",
-          "scope": "#/properties/recurrence_interval",
-          "rule": {
-            "effect": "HIDE",
-            "condition": {
-              "type": "LEAF",
-              "scope": "#/properties/recurrence",
-              "expectedValue": "Never"
-            }
-          }
+          "scope": "#/properties/year"
         }
       ]
     },
     {
-      "type": "VerticalLayout",
+      "type": "Category",
+      "label": "Third",
       "elements": [
         {
           "type": "Control",
-          "scope": "#/properties/productCategory"
+          "scope": "#/properties/price"
         },
         {
           "type": "Control",
-          "scope": "#/properties/categories/anyOf/0/then/properties/meals",
-          "rule": {
-            "effect": "SHOW",
-            "condition": {
-              "scope": "#/properties/productCategory",
-              "schema": { "const": "Breakfast" }
-            }
-          }
-        },
-        {
-          "type": "Control",
-          "scope": "#/properties/categories/anyOf/1/then/properties/meals",
-          "rule": {
-            "effect": "SHOW",
-            "condition": {
-              "scope": "#/properties/productCategory",
-              "schema": { "const": "Dinner" }
-            }
-          }
-        },
-        {
-          "type": "Control",
-          "scope": "#/properties/productSubcategory",
-          "rule": {
-            "effect": "HIDE",
-            "condition": {
-              "scope": "#/properties/productCategory",
-              "schema": { "not": { "const": "Lanch" } }
-            }
-          }
-        },
-        {
-          "type": "Control",
-          "scope": "#/anyOf/0/then/properties/meals",
-          "rule": {
-            "effect": "SHOW",
-            "condition": {
-              "scope": "#/properties/productSubcategory",
-              "schema": { "const": "toast" }
-            }
-          }
-        },
-        {
-          "type": "Control",
-          "scope": "#/anyOf/1/then/properties/meals",
-          "rule": {
-            "effect": "SHOW",
-            "condition": {
-              "scope": "#/properties/productSubcategory",
-              "schema": { "const": "salad" }
-            }
-          }
-        },
-        {
-          "type": "Control",
-          "scope": "#/anyOf/2/then/properties/meals",
-          "rule": {
-            "effect": "SHOW",
-            "condition": {
-              "scope": "#/properties/productSubcategory",
-              "schema": { "const": "snecks" }
-            }
-          }
+          "scope": "#/properties/year"
         }
-      ]
-    },
-    {
-      "type": "Control",
-      "scope": "#/properties/description",
-      "options": {
-        "multi": true
+      ],
+      "rule": {
+        "effect": "SHOW",
+        "condition": {
+          "scope": "#/properties/done",
+          "schema": { "const": true }
+        }
       }
+    },
+    {
+      "type": "Category",
+      "label": "Completed",
+      "elements": [
+        {
+          "type": "VerticalLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "scope": "#/properties/description",
+              "options": {
+                "multi": true
+              }
+            }
+          ]
+        },
+        {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "scope": "#/properties/recurrence"
+            },
+            {
+              "type": "Control",
+              "scope": "#/properties/recurrence_interval",
+              "rule": {
+                "effect": "HIDE",
+                "condition": {
+                  "type": "LEAF",
+                  "scope": "#/properties/recurrence",
+                  "expectedValue": "Never"
+                }
+              }
+            }
+          ]
+        }
+      ]
     }
-  ]
+  ],
+  "options": {
+    "variant": "stepper",
+    "showNavButtons": true
+  }
 }
