@@ -40,52 +40,7 @@
     },
     "recurrence_interval": {
       "type": "integer"
-    },
-    "productCategory": {
-      "title": "Category",
-      "type": "string",
-      "enum": ["Breakfast", "Dinner", "Lanch"]
-    },
-    "productSubcategory": {
-      "title": "Subcategory",
-      "type": "string",
-      "enum": ["toast", "salad", "snecks"]
-    },
-    "breakfast": {
-      "type": "string",
-      "enum": ["eggs", "toast with butter", "salad"]
-    },
-    "dinner": {
-      "type": "string",
-      "enum": ["borsch", "porridge with cutlet", "salad"]
-    },
-    "drinks": {
-      "type": "string",
-      "enum": ["coffee", "tea", "juice"]
-    },
-    "toasts": {
-      "type": "string",
-      "enum": ["with butter", "with jam"]
-    },
-    "salad": {
-      "type": "string",
-      "enum": ["with tomatos", "with broccoli", "with salmon"]
-    },
-    "snecks": {
-      "type": "string",
-      "enum": ["nuts", "chips", "cookies"]
     }
   },
-
-  "required": [
-    "name",
-    "price",
-    "productSubcategory",
-    "toasts",
-    "salad",
-    "snecks",
-    "breakfast",
-    "dinner",
-    "productCategory"
-  ]
+  "required": ["name", "price"]
 }
