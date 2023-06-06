@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import logo from './logo.svg';
 import './App.css';
 import { createAjvInstance } from './utils/ajv';
+import { useJsonForms } from '@jsonforms/react';
 import schema from './mocks/schema.json';
 import uischema from './mocks/uischema.json';
 import renderers from './utils/renderers';
@@ -50,6 +51,7 @@ const App = () => {
   const classes = useStyles();
   const [data, setData] = useState<any>(initialData);
   const stringifiedData = useMemo(() => JSON.stringify(data, null, 2), [data]);
+
   const ajv = createAjvInstance({
     formats: { date: true, year: true, price: true },
     useDefaults: true,
@@ -96,10 +98,10 @@ const App = () => {
           </Button>
         </Grid>
         <Grid item sm={6}>
+          <Typography variant={'h4'} className={classes.title}>
+            Rendered form
+          </Typography>
           <form onSubmit={handleSubmit}>
-            <Typography variant={'h4'} className={classes.title}>
-              Rendered form
-            </Typography>
             <div className={classes.demoform}>
               <JsonForms
                 ajv={ajv}
@@ -110,17 +112,9 @@ const App = () => {
                 // cells={cells}
                 onChange={({ errors, data }) => {
                   setData(data);
-                  console.log('hasErrors >>>', errors);
                 }}
+                config={{ onSubmit: handleSubmit }}
               />
-              <Button
-                className={classes.resetButton}
-                color='primary'
-                variant='contained'
-                type='submit'
-              >
-                Submit data
-              </Button>
             </div>
           </form>
         </Grid>

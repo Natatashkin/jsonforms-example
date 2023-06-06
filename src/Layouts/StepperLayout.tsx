@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, FormEvent } from 'react';
 import {
   MaterialLayoutRenderer,
   MaterialLayoutRendererProps,
@@ -9,6 +9,8 @@ import {
   withJsonFormsLayoutProps,
   TranslateProps,
   withTranslateProps,
+  useJsonForms,
+  JsonFormsStateContext,
 } from '@jsonforms/react';
 import {
   StatePropsOfLayout,
@@ -22,8 +24,10 @@ import {
   Categorization,
   isVisible,
   Category,
+  JsonFormsCore,
 } from '@jsonforms/core';
-import { Box, Step, StepButton, Stepper } from '@mui/material';
+import { Box, Step, StepButton, Stepper, Button } from '@mui/material';
+import { ErrorObject } from 'ajv';
 
 export interface StepperLayoutProps
   extends StatePropsOfLayout,
@@ -48,13 +52,14 @@ const StepperLayout = (props: StepperLayoutProps) => {
   } = props;
   const categorization = uischema as Categorization;
   const [activeCategory, setActiveCategory] = useState<number>(0);
+  const [errors, setErrors] = useState<any[]>([]);
+  const { onSubmit } = config;
 
   const handleStep = (step: number) => {
     setActiveCategory(step);
   };
   const appliedUiSchemaOptions = { ...config, ...uischema.options };
-
-  // console.log(categorization);
+  const { core }: JsonFormsStateContext = useJsonForms();
 
   const categories = useMemo(
     () =>
@@ -80,9 +85,27 @@ const StepperLayout = (props: StepperLayoutProps) => {
 
   // need finish from https://github.com/eclipsesource/jsonforms/blob/master/packages/material-renderers/src/layouts/MaterialCategorizationStepperLayout.tsx
 
+  const isLastCategory = categorization.elements.length - 1 === activeCategory;
+  console.log(core?.errors);
+
+  const handleNextClick = () => {
+    if (core?.errors?.length) {
+      setErrors([core?.errors]);
+      return;
+    }
+    if (isLastCategory) {
+      return;
+    }
+    handleStep(activeCategory + 1);
+  };
+
+  const handleBackClick = () => {
+    setErrors([]);
+    handleStep(activeCategory - 1);
+  };
+
   return (
     <Box>
-      should be stepper layout
       <Stepper activeStep={activeCategory} nonLinear>
         {categories.map((_, idx: number) => (
           <Step key={tabLabels[idx]}>
@@ -93,6 +116,27 @@ const StepperLayout = (props: StepperLayoutProps) => {
         ))}
       </Stepper>
       <MaterialLayoutRenderer {...childProps} />
+      {appliedUiSchemaOptions.showNavButtons && (
+        <>
+          {activeCategory > 0 && (
+            <Button
+              variant='contained'
+              color='secondary'
+              onClick={handleBackClick}
+            >
+              Prev
+            </Button>
+          )}
+          <Button
+            type={isLastCategory ? 'submit' : 'button'}
+            variant='contained'
+            color='primary'
+            onClick={handleNextClick}
+          >
+            {isLastCategory ? 'Submit' : 'Next'}
+          </Button>
+        </>
+      )}
     </Box>
   );
 };
