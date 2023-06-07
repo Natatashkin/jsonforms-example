@@ -40,6 +40,16 @@
     },
     "recurrence_interval": {
       "type": "integer"
+    },
+    "city": {
+      "type": "string"
+    },
+    "street": {
+      "type": "string"
+    },
+    "gender": {
+      "type": "string",
+      "enum": ["female", "male"]
     }
   },
   "required": ["name", "price"]

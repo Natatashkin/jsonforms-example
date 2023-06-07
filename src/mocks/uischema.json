@@ -13,6 +13,10 @@
         {
           "type": "Control",
           "scope": "#/properties/name"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/gender"
         }
       ]
     },
@@ -48,6 +52,27 @@
         "condition": {
           "scope": "#/properties/done",
           "schema": { "const": true }
+        }
+      }
+    },
+    {
+      "type": "Category",
+      "label": "Additional",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/city"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/street"
+        }
+      ],
+      "rule": {
+        "effect": "SHOW",
+        "condition": {
+          "scope": "#/properties/gender",
+          "schema": { "const": "male" }
         }
       }
     },

@@ -1,4 +1,4 @@
-import { Fragment, useState, useMemo, FormEvent } from 'react';
+import { Fragment, useState, useMemo, FormEvent, useEffect } from 'react';
 import { JsonForms } from '@jsonforms/react';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
@@ -11,6 +11,7 @@ import schema from './mocks/schema.json';
 import uischema from './mocks/uischema.json';
 import renderers from './utils/renderers';
 import { makeStyles } from '@mui/styles';
+import { JsonFormsCore } from '@jsonforms/core';
 
 const useStyles = makeStyles({
   container: {
@@ -48,9 +49,10 @@ const initialData = {
 };
 
 const App = () => {
-  const classes = useStyles();
   const [data, setData] = useState<any>(initialData);
-  const [errors, setErrors] = useState<any[]>([]);
+  const { errors } = useJsonForms().core as JsonFormsCore;
+  const classes = useStyles();
+
   const stringifiedData = useMemo(() => JSON.stringify(data, null, 2), [data]);
 
   const ajv = createAjvInstance({
@@ -63,12 +65,10 @@ const App = () => {
   };
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (errors.length) {
+    if (!errors?.length) {
       console.log('you have errors!!');
-
       return;
     }
-
     console.log('submit data', data);
   };
 
@@ -118,9 +118,6 @@ const App = () => {
                 renderers={renderers}
                 // cells={cells}
                 onChange={({ errors, data }) => {
-                  if (errors?.length) {
-                    setErrors(errors);
-                  }
                   setData(data);
                 }}
               />

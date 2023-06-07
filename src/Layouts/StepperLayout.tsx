@@ -24,7 +24,14 @@ import {
   Categorization,
   isVisible,
 } from '@jsonforms/core';
-import { Box, Step, StepButton, Stepper, Button } from '@mui/material';
+import {
+  Box,
+  Step,
+  StepButton,
+  Stepper,
+  Button,
+  StepLabel,
+} from '@mui/material';
 
 export interface StepperLayoutProps
   extends StatePropsOfLayout,
@@ -36,6 +43,21 @@ export interface StepperLayoutProps
 const COUNT_CONTROL = {
   increment: 'increment',
   decrement: 'decrement',
+};
+
+const getScopedName = (array: any) => {
+  return array.map((item: any) => {
+    if (item.type === 'Control') {
+      const arr = item.scope.split('/');
+      return arr[arr.length - 1];
+    }
+
+    if (item.elements) {
+      return getScopedName(item.elements);
+    }
+
+    return [];
+  });
 };
 
 const StepperLayout = (props: StepperLayoutProps) => {
@@ -64,10 +86,12 @@ const StepperLayout = (props: StepperLayoutProps) => {
     [categorization, data, ajv]
   );
 
-  const isLastCategory = categories.length - 1 === activeCategory;
+  const isActiveLastCategory = categories.length - 1 === activeCategory;
 
   const handleStep = (step: number, type?: string) => {
-    if (isLastCategory && type !== 'decrement') {
+    console.log(type);
+
+    if (isActiveLastCategory && type !== 'decrement') {
       return;
     }
 
@@ -79,7 +103,6 @@ const StepperLayout = (props: StepperLayoutProps) => {
         setActiveCategory(step - 1);
         break;
       default:
-        setActiveCategory(step);
         break;
     }
   };
@@ -102,17 +125,28 @@ const StepperLayout = (props: StepperLayoutProps) => {
 
   // need finish from https://github.com/eclipsesource/jsonforms/blob/master/packages/material-renderers/src/layouts/MaterialCategorizationStepperLayout.tsx
 
-  const buttonLabel = isLastCategory ? 'Submit' : 'Next';
-  const buttonType = isLastCategory ? 'submit' : 'button';
+  const buttonLabel = isActiveLastCategory ? 'Submit' : 'Next';
+  const buttonType = isActiveLastCategory ? 'submit' : 'button';
 
   return (
     <Box>
       <Stepper activeStep={activeCategory} nonLinear>
-        {categories.map((_, idx: number) => {
+        {categories.map((category, idx: number) => {
+          const categoryElementsNames = getScopedName(category.elements).flat(
+            Infinity
+          );
+          const hasErrors = categoryElementsNames.filter((error: any) => {
+            return context?.core?.errors?.find(
+              (item) => item.params?.missingProperty === error
+            );
+          });
+
           return (
             <Step key={tabLabels[idx]}>
-              <StepButton onClick={() => handleStep(idx)}>
-                {tabLabels[idx]}
+              <StepButton onClick={() => setActiveCategory(idx)}>
+                <StepLabel error={Boolean(hasErrors.length)}>
+                  {tabLabels[idx]}
+                </StepLabel>
               </StepButton>
             </Step>
           );
