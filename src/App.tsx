@@ -50,6 +50,7 @@ const initialData = {
 const App = () => {
   const classes = useStyles();
   const [data, setData] = useState<any>(initialData);
+  const [errors, setErrors] = useState<any[]>([]);
   const stringifiedData = useMemo(() => JSON.stringify(data, null, 2), [data]);
 
   const ajv = createAjvInstance({
@@ -62,7 +63,13 @@ const App = () => {
   };
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(data);
+    if (errors.length) {
+      console.log('you have errors!!');
+
+      return;
+    }
+
+    console.log('submit data', data);
   };
 
   return (
@@ -111,9 +118,11 @@ const App = () => {
                 renderers={renderers}
                 // cells={cells}
                 onChange={({ errors, data }) => {
+                  if (errors?.length) {
+                    setErrors(errors);
+                  }
                   setData(data);
                 }}
-                config={{ onSubmit: handleSubmit }}
               />
             </div>
           </form>

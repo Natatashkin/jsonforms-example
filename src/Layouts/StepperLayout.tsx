@@ -23,11 +23,8 @@ import {
   optionIs,
   Categorization,
   isVisible,
-  Category,
-  JsonFormsCore,
 } from '@jsonforms/core';
 import { Box, Step, StepButton, Stepper, Button } from '@mui/material';
-import { ErrorObject } from 'ajv';
 
 export interface StepperLayoutProps
   extends StatePropsOfLayout,
@@ -36,8 +33,12 @@ export interface StepperLayoutProps
   data: any;
 }
 
+const COUNT_CONTROL = {
+  increment: 'increment',
+  decrement: 'decrement',
+};
+
 const StepperLayout = (props: StepperLayoutProps) => {
-  console.log(props);
   const {
     uischema,
     config,
@@ -52,22 +53,38 @@ const StepperLayout = (props: StepperLayoutProps) => {
   } = props;
   const categorization = uischema as Categorization;
   const [activeCategory, setActiveCategory] = useState<number>(0);
-  const [errors, setErrors] = useState<any[]>([]);
-  const { onSubmit } = config;
-
-  const handleStep = (step: number) => {
-    setActiveCategory(step);
-  };
-  const appliedUiSchemaOptions = { ...config, ...uischema.options };
-  const { core }: JsonFormsStateContext = useJsonForms();
+  const context: JsonFormsStateContext = useJsonForms();
+  console.log('errors in Stepper >>>', context?.core?.errors);
 
   const categories = useMemo(
     () =>
-      categorization.elements.filter((category) =>
-        isVisible(category, data, path, ajv)
-      ),
+      categorization.elements.filter((category) => {
+        return isVisible(category, data, path, ajv);
+      }),
     [categorization, data, ajv]
   );
+
+  const isLastCategory = categories.length - 1 === activeCategory;
+
+  const handleStep = (step: number, type?: string) => {
+    if (isLastCategory && type !== 'decrement') {
+      return;
+    }
+
+    switch (type) {
+      case 'increment':
+        setActiveCategory(step + 1);
+        break;
+      case 'decrement':
+        setActiveCategory(step - 1);
+        break;
+      default:
+        setActiveCategory(step);
+        break;
+    }
+  };
+
+  const appliedUiSchemaOptions = { ...config, ...uischema.options };
 
   const childProps: MaterialLayoutRendererProps = {
     elements: categories[activeCategory].elements,
@@ -80,60 +97,48 @@ const StepperLayout = (props: StepperLayoutProps) => {
   };
 
   const tabLabels = useMemo(() => {
-    return categories.map((e) => deriveLabelForUISchemaElement(e, t));
+    return categories.map((schema) => deriveLabelForUISchemaElement(schema, t));
   }, [categories, t]);
 
   // need finish from https://github.com/eclipsesource/jsonforms/blob/master/packages/material-renderers/src/layouts/MaterialCategorizationStepperLayout.tsx
 
-  const isLastCategory = categorization.elements.length - 1 === activeCategory;
-  console.log(core?.errors);
-
-  const handleNextClick = () => {
-    if (core?.errors?.length) {
-      setErrors([core?.errors]);
-      return;
-    }
-    if (isLastCategory) {
-      return;
-    }
-    handleStep(activeCategory + 1);
-  };
-
-  const handleBackClick = () => {
-    setErrors([]);
-    handleStep(activeCategory - 1);
-  };
+  const buttonLabel = isLastCategory ? 'Submit' : 'Next';
+  const buttonType = isLastCategory ? 'submit' : 'button';
 
   return (
     <Box>
       <Stepper activeStep={activeCategory} nonLinear>
-        {categories.map((_, idx: number) => (
-          <Step key={tabLabels[idx]}>
-            <StepButton onClick={() => handleStep(idx)}>
-              {tabLabels[idx]}
-            </StepButton>
-          </Step>
-        ))}
+        {categories.map((_, idx: number) => {
+          return (
+            <Step key={tabLabels[idx]}>
+              <StepButton onClick={() => handleStep(idx)}>
+                {tabLabels[idx]}
+              </StepButton>
+            </Step>
+          );
+        })}
       </Stepper>
       <MaterialLayoutRenderer {...childProps} />
       {appliedUiSchemaOptions.showNavButtons && (
         <>
-          {activeCategory > 0 && (
+          {!!activeCategory && (
             <Button
               variant='contained'
               color='secondary'
-              onClick={handleBackClick}
+              onClick={() =>
+                handleStep(activeCategory, COUNT_CONTROL.decrement)
+              }
             >
               Prev
             </Button>
           )}
           <Button
-            type={isLastCategory ? 'submit' : 'button'}
+            type={buttonType}
             variant='contained'
             color='primary'
-            onClick={handleNextClick}
+            onClick={() => handleStep(activeCategory, COUNT_CONTROL.increment)}
           >
-            {isLastCategory ? 'Submit' : 'Next'}
+            {buttonLabel}
           </Button>
         </>
       )}
