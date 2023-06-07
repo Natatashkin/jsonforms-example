@@ -65,7 +65,9 @@ const App = () => {
   };
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!errors?.length) {
+    if (errors?.length) {
+      console.log('errors in submit', errors);
+
       console.log('you have errors!!');
       return;
     }

@@ -33,6 +33,8 @@ import {
   StepLabel,
 } from '@mui/material';
 
+// help from https://github.com/eclipsesource/jsonforms/blob/master/packages/material-renderers/src/layouts/MaterialCategorizationStepperLayout.tsx
+
 export interface StepperLayoutProps
   extends StatePropsOfLayout,
     AjvProps,
@@ -60,6 +62,14 @@ const getScopedName = (array: any) => {
   });
 };
 
+const compareErrors = (fieldNames: string[], errorsFromContext: any) => {
+  return fieldNames.filter((error: any) => {
+    return errorsFromContext.find(
+      (item: any) => item.params?.missingProperty === error
+    );
+  });
+};
+
 const StepperLayout = (props: StepperLayoutProps) => {
   const {
     uischema,
@@ -76,7 +86,6 @@ const StepperLayout = (props: StepperLayoutProps) => {
   const categorization = uischema as Categorization;
   const [activeCategory, setActiveCategory] = useState<number>(0);
   const context: JsonFormsStateContext = useJsonForms();
-  console.log('errors in Stepper >>>', context?.core?.errors);
 
   const categories = useMemo(
     () =>
@@ -89,9 +98,7 @@ const StepperLayout = (props: StepperLayoutProps) => {
   const isActiveLastCategory = categories.length - 1 === activeCategory;
 
   const handleStep = (step: number, type?: string) => {
-    console.log(type);
-
-    if (isActiveLastCategory && type !== 'decrement') {
+    if (isActiveLastCategory && type && type !== 'decrement') {
       return;
     }
 
@@ -103,6 +110,7 @@ const StepperLayout = (props: StepperLayoutProps) => {
         setActiveCategory(step - 1);
         break;
       default:
+        setActiveCategory(step);
         break;
     }
   };
@@ -123,8 +131,6 @@ const StepperLayout = (props: StepperLayoutProps) => {
     return categories.map((schema) => deriveLabelForUISchemaElement(schema, t));
   }, [categories, t]);
 
-  // need finish from https://github.com/eclipsesource/jsonforms/blob/master/packages/material-renderers/src/layouts/MaterialCategorizationStepperLayout.tsx
-
   const buttonLabel = isActiveLastCategory ? 'Submit' : 'Next';
   const buttonType = isActiveLastCategory ? 'submit' : 'button';
 
@@ -135,18 +141,16 @@ const StepperLayout = (props: StepperLayoutProps) => {
           const categoryElementsNames = getScopedName(category.elements).flat(
             Infinity
           );
-          const hasErrors = categoryElementsNames.filter((error: any) => {
-            return context?.core?.errors?.find(
-              (item) => item.params?.missingProperty === error
-            );
-          });
+          const currentErrors = compareErrors(
+            categoryElementsNames,
+            context?.core?.errors
+          );
+          const hasErrors = Boolean(currentErrors?.length);
 
           return (
             <Step key={tabLabels[idx]}>
-              <StepButton onClick={() => setActiveCategory(idx)}>
-                <StepLabel error={Boolean(hasErrors.length)}>
-                  {tabLabels[idx]}
-                </StepLabel>
+              <StepButton onClick={() => handleStep(idx)}>
+                <StepLabel error={hasErrors}>{tabLabels[idx]}</StepLabel>
               </StepButton>
             </Step>
           );
