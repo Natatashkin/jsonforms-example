@@ -14,16 +14,11 @@ import {
 } from '@jsonforms/react';
 import {
   StatePropsOfLayout,
-  categorizationHasCategory,
   deriveLabelForUISchemaElement,
-  RankedTester,
-  and,
-  rankWith,
-  uiTypeIs,
-  optionIs,
   Categorization,
   isVisible,
 } from '@jsonforms/core';
+import { compareErrors, getScopedName } from '../utils/helpers';
 import {
   Box,
   Step,
@@ -45,29 +40,6 @@ export interface StepperLayoutProps
 const COUNT_CONTROL = {
   increment: 'increment',
   decrement: 'decrement',
-};
-
-const getScopedName = (array: any) => {
-  return array.map((item: any) => {
-    if (item.type === 'Control') {
-      const arr = item.scope.split('/');
-      return arr[arr.length - 1];
-    }
-
-    if (item.elements) {
-      return getScopedName(item.elements);
-    }
-
-    return [];
-  });
-};
-
-const compareErrors = (fieldNames: string[], errorsFromContext: any) => {
-  return fieldNames.filter((error: any) => {
-    return errorsFromContext.find(
-      (item: any) => item.params?.missingProperty === error
-    );
-  });
 };
 
 const StepperLayout = (props: StepperLayoutProps) => {
@@ -186,13 +158,4 @@ const StepperLayout = (props: StepperLayoutProps) => {
 
 export default withAjvProps(
   withTranslateProps(withJsonFormsLayoutProps(StepperLayout))
-);
-
-export const stepperLayoutTester: RankedTester = rankWith(
-  3,
-  and(
-    uiTypeIs('Categorization'),
-    categorizationHasCategory,
-    optionIs('variant', 'stepper')
-  )
 );

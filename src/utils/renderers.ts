@@ -5,7 +5,7 @@ import numericInpuControlTester from '../testers/numericInpuControlTester';
 import RatingControl from '../RatingControl';
 import NumericInputControl from '../Controls/NumericInputControl';
 import StepperLayout from '../Layouts/StepperLayout';
-import { stepperLayoutTester } from '../Layouts/StepperLayout';
+import { stepperLayoutTester } from '../testers/stepperLayoutTester';
 
 const renderers = [
   ...materialRenderers,
