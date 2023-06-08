@@ -57,7 +57,7 @@ const StepperLayout = (props: StepperLayoutProps) => {
   } = props;
   const categorization = uischema as Categorization;
   const [activeCategory, setActiveCategory] = useState<number>(0);
-  const context: JsonFormsStateContext = useJsonForms();
+  const { errors } = useJsonForms().core as JsonFormsStateContext;
 
   const categories = useMemo(
     () =>
@@ -113,10 +113,7 @@ const StepperLayout = (props: StepperLayoutProps) => {
           const categoryElementsNames = getScopedName(category.elements).flat(
             Infinity
           );
-          const currentErrors = compareErrors(
-            categoryElementsNames,
-            context?.core?.errors
-          );
+          const currentErrors = compareErrors(categoryElementsNames, errors);
           const hasErrors = Boolean(currentErrors?.length);
 
           return (

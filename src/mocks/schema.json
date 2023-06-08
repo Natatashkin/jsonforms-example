@@ -3,6 +3,8 @@
   "properties": {
     "name": {
       "type": "string",
+      "title": "Name",
+      "i18n": "name",
       "minLength": 1
     },
     "price": {
@@ -24,7 +26,8 @@
       "type": "string"
     },
     "done": {
-      "type": "boolean"
+      "type": "boolean",
+      "title": "Completed"
     },
     "due_date": {
       "type": "string",

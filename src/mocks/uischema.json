@@ -4,10 +4,10 @@
     {
       "type": "Category",
       "label": "First",
+      "i18n": "step1",
       "elements": [
         {
           "type": "Control",
-          "label": "Completed",
           "scope": "#/properties/done"
         },
         {
@@ -23,6 +23,7 @@
     {
       "type": "Category",
       "label": "Second",
+      "i18n": "step2",
       "elements": [
         {
           "type": "Control",
@@ -37,6 +38,7 @@
     {
       "type": "Category",
       "label": "Third",
+      "i18n": "step3",
       "elements": [
         {
           "type": "Control",
@@ -58,6 +60,7 @@
     {
       "type": "Category",
       "label": "Additional",
+      "i18n": "stepAdditional",
       "elements": [
         {
           "type": "Control",
@@ -79,6 +82,7 @@
     {
       "type": "Category",
       "label": "Completed",
+      "i18n": "finalStep",
       "elements": [
         {
           "type": "VerticalLayout",

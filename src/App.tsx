@@ -1,17 +1,23 @@
-import { Fragment, useState, useMemo, FormEvent, useEffect } from 'react';
-import { JsonForms } from '@jsonforms/react';
+import { Fragment, useState, useMemo, FormEvent } from 'react';
+import {
+  JsonForms,
+  JsonFormsStateContext,
+  useJsonForms,
+} from '@jsonforms/react';
+import { JsonFormsCore, Translator } from '@jsonforms/core';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import logo from './logo.svg';
-import './App.css';
-import { createAjvInstance } from './utils/ajv';
-import { useJsonForms } from '@jsonforms/react';
+import ajv from './utils/ajv';
 import schema from './mocks/schema.json';
 import uischema from './mocks/uischema.json';
 import renderers from './utils/renderers';
+import createTranslator from './utils/createTranslator';
+
 import { makeStyles } from '@mui/styles';
-import { JsonFormsCore } from '@jsonforms/core';
+import './App.css';
+import { ErrorObject } from 'ajv';
 
 const useStyles = makeStyles({
   container: {
@@ -50,24 +56,23 @@ const initialData = {
 
 const App = () => {
   const [data, setData] = useState<any>(initialData);
-  const { errors } = useJsonForms().core as JsonFormsCore;
-  const classes = useStyles();
+  const [formErrors, setFormErrors] = useState<ErrorObject[]>([]);
+  const [locale, setLocale] = useState<'ua' | 'ru'>('ua');
 
+  const classes = useStyles();
   const stringifiedData = useMemo(() => JSON.stringify(data, null, 2), [data]);
 
-  const ajv = createAjvInstance({
-    formats: { date: true, year: true, price: true },
-    useDefaults: true,
-  });
+  const translation: Translator = useMemo(
+    () => createTranslator(locale),
+    [locale]
+  );
 
   const clearData = () => {
     setData({});
   };
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (errors?.length) {
-      console.log('errors in submit', errors);
-
+    if (formErrors?.length) {
       console.log('you have errors!!');
       return;
     }
@@ -114,12 +119,21 @@ const App = () => {
             <div className={classes.demoform}>
               <JsonForms
                 ajv={ajv}
+                i18n={{
+                  locale: locale,
+                  translate: translation,
+                }}
                 schema={schema}
                 uischema={uischema}
                 data={data}
                 renderers={renderers}
                 // cells={cells}
                 onChange={({ errors, data }) => {
+                  if (errors?.length) {
+                    setFormErrors(errors);
+                  } else {
+                    setFormErrors([]);
+                  }
                   setData(data);
                 }}
               />
