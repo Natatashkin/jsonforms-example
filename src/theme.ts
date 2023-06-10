@@ -3,9 +3,6 @@ import { createTheme } from '@mui/material';
 
 const customTheme = createTheme({
   components: {
-    MuiFormControl: {
-      styleOverrides: {},
-    },
     MuiInputLabel: {
       defaultProps: {
         shrink: false,
@@ -14,7 +11,8 @@ const customTheme = createTheme({
       styleOverrides: {
         root: ({ theme }) => {
           return {
-            top: -24,
+            top: -6,
+            transform: 'none',
           };
         },
       },
@@ -66,6 +64,13 @@ const customTheme = createTheme({
             bottom: 0,
             marginLeft: 0,
           };
+        },
+      },
+    },
+    MuiAutocomplete: {
+      styleOverrides: {
+        inputRoot: {
+          padding: '4px 40px 4px 8px',
         },
       },
     },

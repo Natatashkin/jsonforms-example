@@ -45,7 +45,8 @@
       "type": "integer"
     },
     "city": {
-      "type": "string"
+      "type": "string",
+      "enum": ["Chekasy", "Kyiv"]
     },
     "street": {
       "type": "string"

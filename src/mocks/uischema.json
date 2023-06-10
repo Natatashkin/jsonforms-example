@@ -63,12 +63,17 @@
       "i18n": "stepAdditional",
       "elements": [
         {
-          "type": "Control",
-          "scope": "#/properties/city"
-        },
-        {
-          "type": "Control",
-          "scope": "#/properties/street"
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "scope": "#/properties/city"
+            },
+            {
+              "type": "Control",
+              "scope": "#/properties/street"
+            }
+          ]
         }
       ],
       "rule": {
